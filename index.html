@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>파이어드 부의 해방일지 퀴즈 게임</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+    .quiz-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+    .choice {
+      margin-bottom: 10px;
+    }
+    .choice button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #eee;
+      cursor: pointer;
+    }
+    .choice button:hover {
+      background-color: #ddd;
+    }
+    .feedback {
+      font-size: 1.1em;
+      margin-top: 20px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+    .next-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #4285F4;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quiz">
+      <!-- 퀴즈 내용이 여기서 동적으로 생성됩니다. -->
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. FIRE는 무엇의 약자인가요?",
+        choices: [
+          "Financial Independence, Retire Early",
+          "Financial Investment, Real Estate",
+          "Fast Income, Rapid Earnings",
+          "Financially Independent, Rich Eternity"
+        ],
+        correct: 0,
+        explanation: "FIRE는 Financial Independence, Retire Early의 약자로, 경제적 독립과 조기 퇴직을 의미합니다."
+      },
+      {
+        question: "2. 책에서 부의 주요 이점 중 하나로 언급된 것은 무엇인가요?",
+        choices: [
+          "비싼 자동차 구매",
+          "시간의 자유",
+          "사회적 지위 상승",
+          "물질적 소유물 증가"
+        ],
+        correct: 1,
+        explanation: "책은 부가 시간의 자유를 제공한다고 강조합니다."
+      },
+      {
+        question: "3. '부는 당신에게 모든 것을 허락한다'라는 제목의 챕터는 어느 챕터인가요?",
+        choices: [
+          "Chapter 1",
+          "Chapter 2",
+          "Chapter 3",
+          "프롤로그"
+        ],
+        correct: 1,
+        explanation: "Chapter 2의 제목이 '부는 당신에게 모든 것을 허락한다'입니다."
+      },
+      {
+        question: "4. Chapter 3에서 부의 단점 중 하나로 언급된 것은 무엇인가요?",
+        choices: [
+          "무한한 자유",
+          "헝그리 정신의 상실",
+          "여유로운 생활",
+          "향상된 인간관계"
+        ],
+        correct: 1,
+        explanation: "Chapter 3에서는 부로 인해 헝그리 정신, 즉 끊임없이 도전하고 성장하려는 열정이 상실될 수 있다고 언급합니다."
+      },
+      {
+        question: "5. 책은 진정한 자유를 위해 부 외에 무엇이 필수적이라고 강조하나요?",
+        choices: [
+          "큰 집",
+          "지속적인 개인 성장과 의미 있는 경험",
+          "럭셔리 아이템 소유",
+          "유명세"
+        ],
+        correct: 1,
+        explanation: "책은 돈 외에도 지속적인 개인 성장과 의미 있는 경험이 진정한 자유의 필수 요소라고 강조합니다."
+      },
+      {
+        question: "6. 책에 따르면 부가 보장하지 않는 것은 무엇인가요?",
+        choices: [
+          "시간의 자유",
+          "행복과 충만함",
+          "배움의 기회",
+          "투자 수익"
+        ],
+        correct: 1,
+        explanation: "부가 있다고 해서 자동으로 행복과 충만함을 보장하지는 않습니다."
+      },
+      {
+        question: "7. 책에서는 돈과 시간의 관계를 어떻게 설명하나요?",
+        choices: [
+          "돈과 시간은 관련이 없다.",
+          "돈이 있으면 일을 타인에게 맡겨 더 많은 자유 시간을 확보할 수 있다.",
+          "시간은 돈을 직접 구매할 수 있다.",
+          "시간은 항상 돈보다 더 소중하다."
+        ],
+        correct: 1,
+        explanation: "돈이 있으면 타인에게 일을 맡겨 자신의 자유 시간을 늘릴 수 있다는 점을 설명합니다."
+      },
+      {
+        question: "8. '파이어드 부의 해방일지'의 주요 목적은 무엇인가요?",
+        choices: [
+          "빠른 부의 획득 방법 홍보",
+          "재정적 독립과 개인 성장을 통한 삶의 전환 논의",
+          "현대 기술 비판",
+          "초보 투자자를 위한 투자 팁 제공"
+        ],
+        correct: 1,
+        explanation: "책은 재정적 독립과 개인 성장을 통해 삶이 어떻게 전환될 수 있는지에 대해 논의합니다."
+      },
+      {
+        question: "9. Chapter 1에서 주로 다루는 내용은 무엇인가요?",
+        choices: [
+          "전통적인 직업의 안정성",
+          "직장을 그만두고 자유를 추구하는 도전과 기회",
+          "럭셔리 상품 구매의 중요성",
+          "투자의 위험성"
+        ],
+        correct: 1,
+        explanation: "Chapter 1은 직장을 그만두고 자유를 추구하는 과정과 그 도전 및 기회를 다룹니다."
+      },
+      {
+        question: "10. 부에 대한 일반적인 오해는 무엇인가요?",
+        choices: [
+          "부는 오직 부자들에게만 해당된다.",
+          "돈이 모든 것을 살 수 있다고 믿는 것",
+          "부는 중요하지 않다는 것",
+          "돈이 삶의 질에 영향을 미치지 않는다는 것"
+        ],
+        correct: 1,
+        explanation: "많은 사람들은 돈이 모든 것을 해결할 수 있다고 오해하지만, 그렇지 않습니다."
+      },
+      {
+        question: "11. 책에 따르면 부가 개인 관계에 미치는 영향은?",
+        choices: [
+          "항상 관계를 개선한다.",
+          "관계를 변화시키고 때로는 거리를 둘 수 있다.",
+          "모든 갈등을 제거한다.",
+          "항상 오래가는 우정을 보장한다."
+        ],
+        correct: 1,
+        explanation: "부는 개인 관계에 변화를 가져오며 때로는 기존 관계에 거리를 둘 수 있습니다."
+      },
+      {
+        question: "12. 다음 중 책의 주요 주제가 아닌 것은?",
+        choices: [
+          "투자 전략",
+          "개인 성장과 자유",
+          "부의 심리적 효과",
+          "주식 거래의 세부 기술 분석"
+        ],
+        correct: 3,
+        explanation: "이 책은 부의 철학과 삶의 변화를 다루며, 주식 거래의 세부 기술 분석은 포함하지 않습니다."
+      },
+      {
+        question: "13. '돈의 구속'이란 무엇을 의미하나요?",
+        choices: [
+          "돈이 주는 자유",
+          "돈이 삶에 부과하는 제약",
+          "특정 투자 방법",
+          "금융 상품의 한 종류"
+        ],
+        correct: 1,
+        explanation: "'돈의 구속'은 돈이 주는 자유뿐만 아니라 동시에 삶에 부과하는 제약을 의미합니다."
+      },
+      {
+        question: "14. 재정적 독립을 이루기 위해 개인 경험이 중요한 이유는 무엇인가요?",
+        choices: [
+          "무시해도 된다.",
+          "돈과 성장을 이해하는 핵심 요소이다.",
+          "젊은 시절에만 중요하다.",
+          "정규 교육보다 덜 중요하다."
+        ],
+        correct: 1,
+        explanation: "개인적인 경험은 돈과 성장에 대한 깊은 이해를 도와주며, 재정적 독립을 이루는 데 핵심적입니다."
+      },
+      {
+        question: "15. 사람들이 부를 추구할 때 흔히 저지르는 실수는?",
+        choices: [
+          "부는 자동으로 행복을 준다고 믿는 것",
+          "저축을 너무 많이 하는 것",
+          "배움을 게을리하는 것",
+          "과도한 지출을 하는 것"
+        ],
+        correct: 0,
+        explanation: "많은 사람들은 부가 자동으로 행복을 가져다 줄 것이라고 오해하는 실수를 범합니다."
+      },
+      {
+        question: "16. 책에서 퇴직 후 삶에 대해 어떻게 설명하나요?",
+        choices: [
+          "모든 기회가 사라진다.",
+          "열정을 가지고 자신이 원하는 일을 할 수 있는 새로운 전환점이다.",
+          "직업을 완전히 포기하는 것이다.",
+          "단순한 휴식 기간이다."
+        ],
+        correct: 1,
+        explanation: "퇴직 후의 삶은 자신이 원하는 일을 열정적으로 할 수 있는 새로운 전환점으로 설명됩니다."
+      },
+      {
+        question: "17. '파이어족'이란 무엇을 의미하나요?",
+        choices: [
+          "특정 성씨",
+          "경제적 독립과 조기 퇴직을 추구하는 사람들",
+          "정부 지원 프로그램",
+          "투자 상품의 일종"
+        ],
+        correct: 1,
+        explanation: "'파이어족'은 Financial Independence, Retire Early를 추구하는 사람들을 뜻합니다."
+      },
+      {
+        question: "18. '러닝 메이트'의 중요성에 대해 책은 무엇을 강조하나요?",
+        choices: [
+          "같은 투자를 공유하는 것이다.",
+          "상호 자극과 성장 동기를 제공한다.",
+          "스포츠 경기에서 경쟁한다.",
+          "사회적 클럽에 가입한다."
+        ],
+        correct: 1,
+        explanation: "책은 비슷한 목표와 열정을 가진 사람들과 함께 할 때 상호 자극과 성장 동기를 얻을 수 있다고 설명합니다."
+      },
+      {
+        question: "19. 돈과 관련해 책이 강조하는 시간의 가치는 무엇인가요?",
+        choices: [
+          "돈이 부족할 때 시간이 더 소중하다.",
+          "돈이 있으면 타인의 시간을 살 수 있다.",
+          "시간은 무한하다.",
+          "돈과 시간은 관련이 없다."
+        ],
+        correct: 1,
+        explanation: "돈이 있으면 일을 위임해 타인의 시간을 구매함으로써 자신의 자유 시간을 확보할 수 있다는 점을 강조합니다."
+      },
+      {
+        question: "20. Chapter 2의 메시지를 가장 잘 요약한 문장은?",
+        choices: [
+          "부는 모든 면에서 절대적인 자유를 준다.",
+          "부는 많은 장점을 주지만 모든 문제를 해결해주지는 않는다.",
+          "돈은 성공의 유일한 척도이다.",
+          "투자는 위험하기만 하다."
+        ],
+        correct: 1,
+        explanation: "Chapter 2는 부가 많은 장점을 제공하지만, 모든 문제를 해결해주지는 않는다는 점을 설명합니다."
+      },
+      {
+        question: "21. 책에 따르면 FIRE 운동이 매력적인 이유는 무엇인가요?",
+        choices: [
+          "호화로운 생활 보장",
+          "직장에 얽매이지 않고 자신이 진정 원하는 일을 할 수 있기 때문",
+          "쉽게 달성할 수 있음",
+          "정부 지원이 있음"
+        ],
+        correct: 1,
+        explanation: "FIRE 운동은 직장에 얽매이지 않고 자신이 진정 원하는 일을 할 수 있는 자유를 제공하기 때문에 매력적입니다."
+      },
+      {
+        question: "22. 부를 갑자기 획득했을 때 나타날 수 있는 심리적 영향은?",
+        choices: [
+          "동기 부여 증가",
+          "자만과 동기 상실",
+          "즉각적인 성공",
+          "변함없는 열정"
+        ],
+        correct: 1,
+        explanation: "갑작스런 부는 때때로 자만이나 동기 상실로 이어질 수 있습니다."
+      },
+      {
+        question: "23. 지속적인 배움의 중요성에 대해 책은 무엇을 말하나요?",
+        choices: [
+          "부를 이루면 배움은 필요 없다.",
+          "배움은 개인의 성장과 경험 축적에 필수적이다.",
+          "배움은 젊은 시절에만 중요하다.",
+          "정규 교육만으로 충분하다."
+        ],
+        correct: 1,
+        explanation: "책은 평생 학습과 배움이 개인의 성장에 필수적임을 강조합니다."
+      },
+      {
+        question: "24. 사회적 지위와 부의 관계에 대해 책은 어떻게 말하나요?",
+        choices: [
+          "부는 항상 사회적 지위를 높인다.",
+          "진정한 가치는 개인의 성장과 기여에서 나온다.",
+          "부가 사회적 지위를 결정한다.",
+          "사회적 지위는 무시해도 된다."
+        ],
+        correct: 1,
+        explanation: "책은 부만으로 사회적 지위가 결정되지 않고, 개인의 성장과 기여가 진정한 가치를 만든다고 설명합니다."
+      },
+      {
+        question: "25. 재정적 독립 후 일반적으로 나타나는 행동은 무엇인가요?",
+        choices: [
+          "전혀 일하지 않는다.",
+          "열정적인 프로젝트나 개인의 관심 분야에 집중한다.",
+          "과도하게 소비한다.",
+          "위험을 회피한다."
+        ],
+        correct: 1,
+        explanation: "재정적 독립 후에는 사람들이 열정적인 프로젝트나 관심 분야에 더 집중하는 경향이 있습니다."
+      },
+      {
+        question: "26. 책에서 부의 부재가 가장 크게 영향을 미치는 것은 무엇인가요?",
+        choices: [
+          "건강",
+          "시간의 자유와 일상 생활의 질",
+          "패션 선택",
+          "엔터테인먼트 취향"
+        ],
+        correct: 1,
+        explanation: "부의 부재는 시간의 자유와 일상 생활의 질에 큰 영향을 미칩니다."
+      },
+      {
+        question: "27. '돈에 대한 태도'란 무엇을 의미하나요?",
+        choices: [
+          "엄격한 예산 관리 방법",
+          "돈에 대한 개인의 철학과 태도",
+          "특정 금융 상품",
+          "투자 전략"
+        ],
+        correct: 1,
+        explanation: "'돈에 대한 태도'는 돈에 대해 갖는 개인의 철학과 태도를 의미합니다."
+      },
+      {
+        question: "28. 일과 돈의 관계 전환점에 대해 책은 무엇이라고 설명하나요?",
+        choices: [
+          "쉽게 전환된다.",
+          "도전적이지만 개인의 우선순위를 재정의하는 중요한 변화이다.",
+          "중요하지 않다.",
+          "재정적 위험을 의미한다."
+        ],
+        correct: 1,
+        explanation: "책은 일과 돈의 관계 전환을 개인의 우선순위를 재정의하는 중요한 변화로 설명합니다."
+      },
+      {
+        question: "29. 경제적 자유가 개인에게 가능하게 하는 것은 무엇인가요?",
+        choices: [
+          "일 없이 호화로운 생활",
+          "관심사에 따른 일을 자유롭게 선택할 수 있다.",
+          "사회적 고립",
+          "책임 회피"
+        ],
+        correct: 1,
+        explanation: "경제적 자유는 개인이 필요에 따라 자신의 관심사에 맞는 일을 선택할 수 있게 합니다."
+      },
+      {
+        question: "30. 책의 최종 교훈은 무엇인가요?",
+        choices: [
+          "부는 모든 것을 위한 최종 목표이다.",
+          "부는 자유와 개인 성장을 위한 도구이며, 그 자체가 목적은 아니다.",
+          "돈은 유일한 성공 척도이다.",
+          "투자에만 집중해야 한다."
+        ],
+        correct: 1,
+        explanation: "책의 최종 교훈은 부가 자유와 개인 성장을 위한 수단일 뿐, 그 자체가 최종 목적이 아니라는 점입니다."
+      }
+    ];
+
+    let currentQuestion = 0;
+    const quizContainer = document.getElementById('quiz');
+
+    function loadQuestion() {
+      quizContainer.innerHTML = "";
+      if (currentQuestion >= questions.length) {
+        quizContainer.innerHTML = "<h2>퀴즈를 모두 완료하셨습니다!</h2>";
+        return;
+      }
+      const q = questions[currentQuestion];
+
+      const questionElem = document.createElement("div");
+      questionElem.className = "question";
+      questionElem.textContent = q.question;
+      quizContainer.appendChild(questionElem);
+
+      const choicesList = document.createElement("ul");
+      choicesList.className = "choices";
+      q.choices.forEach((choice, index) => {
+        const li = document.createElement("li");
+        li.className = "choice";
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.addEventListener("click", () => selectAnswer(index));
+        li.appendChild(btn);
+        choicesList.appendChild(li);
+      });
+      quizContainer.appendChild(choicesList);
+    }
+
+    function selectAnswer(selectedIndex) {
+      const q = questions[currentQuestion];
+      // 모든 버튼 비활성화
+      const buttons = document.querySelectorAll(".choice button");
+      buttons.forEach(button => button.disabled = true);
+
+      const feedback = document.createElement("div");
+      feedback.className = "feedback";
+      if (selectedIndex === q.correct) {
+        feedback.innerHTML = '<span class="correct">정답입니다!</span>';
+      } else {
+        feedback.innerHTML = '<span class="incorrect">오답입니다!</span><br>' +
+          "정답: " + q.choices[q.correct] + "<br>" +
+          "이유: " + q.explanation;
+      }
+      quizContainer.appendChild(feedback);
+
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "next-btn";
+      nextBtn.textContent = "다음 문제";
+      nextBtn.addEventListener("click", () => {
+        currentQuestion++;
+        loadQuestion();
+      });
+      quizContainer.appendChild(nextBtn);
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
